@@ -35,6 +35,7 @@ const BaseEnvironments = ({
   const { palette } = useTheme();
   const version: string = process.env.REACT_APP_VERSION as string;
   const environmentsState = useAppSelector(state => state.environments);
+  // const environmentsState = useAppSelector(state => state.environments);
   const namespacesState = useAppSelector(state => state.namespaces);
 
   const dispatch = useAppDispatch();
@@ -99,8 +100,8 @@ const BaseEnvironments = ({
 
   const getEnvironments = async () => {
     const { data: environmentsData } = await triggerQuery({
-      page: environmentsState.page,
-      size,
+      cursor: environmentsState.cursor,
+      limit: size,
       search: environmentsState.search
     });
 
@@ -115,14 +116,19 @@ const BaseEnvironments = ({
   };
 
   const handleChange = debounce(async (value: string) => {
-    const { data } = await triggerQuery({ page: 1, size, search: value });
+    const { data } = await triggerQuery({
+      cursor: null,
+      limit: size,
+      search: value
+    });
 
     if (data) {
       dispatch(
         environmentsSlice.actions.searched({
           data: data.data,
           count: data.count,
-          search: value
+          search: value,
+          cursor: environmentsState.cursor
         })
       );
     }
@@ -130,8 +136,8 @@ const BaseEnvironments = ({
 
   const next = async () => {
     const { data } = await triggerQuery({
-      page: environmentsState.page + 1,
-      size,
+      cursor: environmentsState.cursor,
+      limit: size,
       search: environmentsState.search
     });
 
@@ -139,7 +145,8 @@ const BaseEnvironments = ({
       dispatch(
         environmentsSlice.actions.nextFetched({
           data: data.data,
-          count: data.count
+          count: data.count,
+          cursor: environmentsState.cursor
         })
       );
     }
@@ -184,7 +191,7 @@ const BaseEnvironments = ({
         {environmentsState.data && (
           <EnvironmentsList
             next={next}
-            hasMore={size * environmentsState.page < environmentsState.count}
+            hasMore={environmentsState.data.length < environmentsState.count}
             environmentsList={environmentsState.data}
             namespacesList={namespacesState.data}
             search={environmentsState.search}

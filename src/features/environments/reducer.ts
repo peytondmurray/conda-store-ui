@@ -2,14 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Environment } from "../../common/models";
 
 export interface IEnvironmentsState {
-  page: number;
+  cursor: string | null;
   data: Environment[];
   count: number;
   search: string;
 }
 
 export const initialState: IEnvironmentsState = {
-  page: 1,
+  cursor: null,
   data: [],
   count: 0,
   search: ""
@@ -33,24 +33,28 @@ export const environmentsSlice = createSlice({
         data: Environment[];
         count: number;
         search: string;
+        cursor: string | null;
       }>
     ) => {
-      return { ...action.payload, page: 1 };
+      return { ...action.payload, cursor: null };
     },
     nextFetched: (
       state: IEnvironmentsState,
-      action: PayloadAction<{ data: Environment[]; count: number }>
+      action: PayloadAction<{
+        data: Environment[];
+        count: number;
+        cursor: string | null;
+      }>
     ) => {
-      const { data, count } = action.payload;
+      const { data, count, cursor } = action.payload;
 
       const newData = state.data?.concat(data);
-      const nextPage = state.page + 1;
 
       return {
         ...state,
         data: newData,
         count: count,
-        page: nextPage
+        cursor: cursor
       };
     }
   }
