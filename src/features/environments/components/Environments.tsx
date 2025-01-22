@@ -35,7 +35,6 @@ const BaseEnvironments = ({
   const { palette } = useTheme();
   const version: string = process.env.REACT_APP_VERSION as string;
   const environmentsState = useAppSelector(state => state.environments);
-  // const environmentsState = useAppSelector(state => state.environments);
   const namespacesState = useAppSelector(state => state.namespaces);
 
   const dispatch = useAppDispatch();

@@ -17,7 +17,7 @@ export const environmentDetailsApiSlice = apiSlice.injectEndpoints({
     }),
     updateBuildId: builder.mutation({
       query: ({ namespace, environment, buildId }) => ({
-        url: `/api/v2/environment/${namespace}/${environment}/`,
+        url: `/api/v1/environment/${namespace}/${environment}/`,
         method: "PUT",
         body: {
           build_id: buildId
@@ -26,7 +26,7 @@ export const environmentDetailsApiSlice = apiSlice.injectEndpoints({
     }),
     deleteEnvironment: builder.mutation({
       query: ({ namespace, environment }) => ({
-        url: `/api/v2/environment/${namespace}/${environment}/`,
+        url: `/api/v1/environment/${namespace}/${environment}/`,
         method: "DELETE"
       })
     })
